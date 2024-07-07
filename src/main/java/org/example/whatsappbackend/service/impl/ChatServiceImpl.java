@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.whatsappbackend.exception.ApplicationException;
 import org.example.whatsappbackend.model.dto.request.GroupChatCreateRequest;
 import org.example.whatsappbackend.model.dto.request.GroupUserAddRequest;
+import org.example.whatsappbackend.model.dto.request.GroupUserRemoveRequest;
 import org.example.whatsappbackend.model.dto.request.SingleChatCreateRequest;
+import org.example.whatsappbackend.model.dto.response.ApiResponse;
 import org.example.whatsappbackend.model.dto.response.ChatResponse;
 import org.example.whatsappbackend.model.entity.Chat;
 import org.example.whatsappbackend.model.entity.User;
@@ -51,7 +53,8 @@ public class ChatServiceImpl implements ChatService {
         return new ChatResponse(chat);
     }
 
-    private Chat getChatById(Integer chatId) {
+    @Override
+    public Chat getChatById(Integer chatId) {
         return chatRepository.findById(chatId)
                 .orElseThrow(
                         () -> new ApplicationException("CHAT_NOT_FOUND", String.format("No chat found by id %d", chatId))
@@ -114,10 +117,10 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatResponse removeUserFromGroup(Integer chatId, Integer userId, Integer reqUserId) {
+    public ChatResponse removeUserFromGroup(GroupUserRemoveRequest request) {
         User reqUser = securityUtil.getCurrentLoggedInUser();
-        Chat groupChat = getChatById(chatId);
-        User user = userService.findUserById(userId);
+        Chat groupChat = getChatById(request.chatId());
+        User user = userService.findUserById(request.userId());
 
         if ((groupChat.getParticipants().contains(reqUser) && reqUser.getId() == user.getId()) ||
                 groupChat.getAdmins().contains(reqUser)) {
@@ -129,11 +132,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void deleteChat(Integer chatId) {
+    public ApiResponse deleteChat(Integer chatId) {
         User reqUser = securityUtil.getCurrentLoggedInUser();
         Chat chat = getChatById(chatId);
         if (chat.getAdmins().contains(reqUser)) {
             chatRepository.delete(chat);
+            return new ApiResponse("Chat deleted successfully", true);
         }
 
         throw new ApplicationException("PERMISSION_DENIED", "Only admin can delete a chat");

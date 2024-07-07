@@ -3,10 +3,13 @@ package org.example.whatsappbackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.whatsappbackend.model.dto.request.GroupChatCreateRequest;
 import org.example.whatsappbackend.model.dto.request.GroupUserAddRequest;
+import org.example.whatsappbackend.model.dto.request.GroupUserRemoveRequest;
 import org.example.whatsappbackend.model.dto.request.SingleChatCreateRequest;
+import org.example.whatsappbackend.model.dto.response.ApiResponse;
 import org.example.whatsappbackend.model.dto.response.ChatResponse;
 import org.example.whatsappbackend.service.ChatService;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,5 +50,15 @@ public class ChatController {
     @PutMapping("/groups/add/users")
     public ChatResponse addUserToGroup(@RequestBody @Validated GroupUserAddRequest request) {
         return chatService.addUserToGroup(request);
+    }
+
+    @PutMapping("/groups/remove/users")
+    public ChatResponse addUserToGroup(@RequestBody @Validated GroupUserRemoveRequest request) {
+        return chatService.removeUserFromGroup(request);
+    }
+
+    @DeleteMapping("/delete/{chatId}")
+    public ApiResponse addUserToGroup(@PathVariable int chatId) {
+        return chatService.deleteChat(chatId);
     }
 }
