@@ -1,7 +1,7 @@
 package org.example.whatsappbackend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.whatsappbackend.model.dto.request.LoginRequest;
+import org.example.whatsappbackend.model.dto.request.SignInRequest;
 import org.example.whatsappbackend.model.dto.request.UserCreateRequest;
 import org.example.whatsappbackend.model.dto.response.AuthResponse;
 import org.example.whatsappbackend.service.AuthenticationService;
@@ -24,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signIn")
-    public AuthResponse signIn(@RequestBody @Validated LoginRequest request) {
+    public AuthResponse signIn(@RequestBody @Validated SignInRequest request) {
         return authenticationService.signIn(request);
     }
 }

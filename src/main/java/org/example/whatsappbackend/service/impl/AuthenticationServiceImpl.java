@@ -3,7 +3,7 @@ package org.example.whatsappbackend.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.whatsappbackend.config.security.JwtService;
 import org.example.whatsappbackend.exception.ApplicationException;
-import org.example.whatsappbackend.model.dto.request.LoginRequest;
+import org.example.whatsappbackend.model.dto.request.SignInRequest;
 import org.example.whatsappbackend.model.dto.request.UserCreateRequest;
 import org.example.whatsappbackend.model.dto.response.AuthResponse;
 import org.example.whatsappbackend.model.entity.User;
@@ -38,9 +38,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthResponse signIn(LoginRequest request) {
+    public AuthResponse signIn(SignInRequest request) {
         User user = userRepository.findByEmail(request.email())
-                .filter(u -> passwordEncoder.matches(request.passowrd(), u.getPassword()))
+                .filter(u -> passwordEncoder.matches(request.password(), u.getPassword()))
                 .orElseThrow(() -> new ApplicationException("INVALID_CREDENTIAL", "Invalid username or password"));
 
         String jwt = jwtService.generateAccessToken(user.getEmail());
