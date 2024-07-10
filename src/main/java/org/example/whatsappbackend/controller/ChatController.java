@@ -42,7 +42,7 @@ public class ChatController {
         return chatService.findByChatId(id);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/user")
     public List<ChatResponse> getChatsByUserId() {
         return chatService.findChatByUser();
     }
