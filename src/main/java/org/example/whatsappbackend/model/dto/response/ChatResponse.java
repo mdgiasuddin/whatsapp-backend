@@ -32,6 +32,14 @@ public class ChatResponse {
         this.messages = new ArrayList<>();
     }
 
+    public ChatResponse(Chat chat, Set<User> participants) {
+        this(chat);
+        for (User user : participants) {
+            this.participants.add(new UserResponse(user));
+        }
+
+    }
+
     public ChatResponse(Chat chat, User createdBy, Set<User> participants, Set<User> admins, List<Message> messages) {
         this(chat);
         this.createdBy = new UserResponse(createdBy);

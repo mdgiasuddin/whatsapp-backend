@@ -31,6 +31,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ChatResponse createOneToOneChat(SingleChatCreateRequest request) {
         User reqUser = securityUtil.getCurrentLoggedInUser();
+        if (reqUser.getId() == request.userId()) {
+            throw new ApplicationException("SAME_USER", "Requested user and current user are same");
+        }
+
         User receiverUser = userService.findUserById(request.userId());
         Chat chat = chatRepository.findSingleChatByUsers(reqUser, receiverUser);
         if (chat != null) {
@@ -68,7 +72,7 @@ public class ChatServiceImpl implements ChatService {
         List<ChatResponse> chatResponses = new ArrayList<>();
 
         for (Chat chat : chats) {
-            chatResponses.add(new ChatResponse(chat));
+            chatResponses.add(new ChatResponse(chat, chat.getParticipants()));
         }
         return chatResponses;
     }

@@ -45,7 +45,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> searchUser(String query) {
-        List<User> users = userRepository.searchUser("%" + query + "%");
+        User reqUser = securityUtil.getCurrentLoggedInUser();
+        List<User> users = userRepository.searchUser(reqUser.getId(), "%" + query + "%");
 
         List<UserResponse> userResponses = new ArrayList<>(users.size());
         for (User user : users) {

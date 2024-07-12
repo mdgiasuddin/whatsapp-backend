@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByEmail(String email);
 
-    @Query("select u from User  u where u.fullName ilike :query or u.email ilike :query")
-    List<User> searchUser(String query);
+    @Query("select u from User  u where u.id <> :reqUserId and (u.fullName ilike :query or u.email ilike :query)")
+    List<User> searchUser(Integer reqUserId, String query);
 }
